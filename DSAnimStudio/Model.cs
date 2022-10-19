@@ -268,6 +268,7 @@ namespace DSAnimStudio
                         f.Bytes = t.Write();
                     }
                     tpfsUsed.Add(t);
+                    continue;
                 }
 
                 if ((f.ID % 10) != modelIndex && GameDataManager.GameType != SoulsAssetPipeline.SoulsGames.DS2SOTFS)
@@ -308,8 +309,8 @@ namespace DSAnimStudio
                             }
                         }
                         flver2 = modelToImportDuringLoad.Flver;
-
-                        f.Bytes = flver2.Write();
+                    
+                        f.Bytes = flver2.Write();                    
                     }
                 }
                 else if (GameDataManager.GameType == SoulsGames.DES && flver0 == null && (nameCheck.EndsWith(".flver") || nameCheck.EndsWith(".flv") || FLVER0.Is(f.Bytes)))

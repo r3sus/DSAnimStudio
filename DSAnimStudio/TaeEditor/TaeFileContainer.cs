@@ -273,7 +273,20 @@ namespace DSAnimStudio.TaeEditor
             {
                 GameDataManager.Init(SoulsAssetPipeline.SoulsGames.DS1R, interroot);
             }
-            else if ((check.Contains(@"\FRPG\") && check.Contains(@"HKXWIN32")) || (check.Contains(@"TAENEW\WIN32") && isRemo))
+            else if (
+                (check.Contains(@"\FRPG\") && 
+                (
+                check.Contains(@"HKXWIN32") // PC
+                || 
+                check.Contains(@"\HKX\") // PS3
+                || 
+                check.Contains(@"\HKXX360\")) // 360
+                )
+                || 
+                (check.Contains(@"TAENEW\WIN32") && isRemo) 
+                || 
+                check.Contains(@"\TAENEW\") // followed by *.TAE - console (ps3/360)
+                )
             {
                 GameDataManager.Init(SoulsAssetPipeline.SoulsGames.DS1, interroot);
             }

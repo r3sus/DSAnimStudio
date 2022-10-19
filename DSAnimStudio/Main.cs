@@ -23,7 +23,7 @@ namespace DSAnimStudio
     /// </summary>
     public class Main : Game
     {
-        public const string VERSION = "Version 3.0.5";
+        public string VERSION = "Version "+ Application.ProductVersion;
 
         public static T ReloadMonoGameContent<T>(string path)
         {
@@ -334,6 +334,15 @@ namespace DSAnimStudio
         public static Texture2D DEFAULT_TEXTURE_NORMAL;
         public static Texture2D DEFAULT_TEXTURE_NORMAL_DS2;
         public static Texture2D DEFAULT_TEXTURE_MISSING;
+        /*
+         public static Texture2D invtex;
+         public enum invtexs
+         {
+             None,
+             FPS30,
+             FPS60,
+         }
+        */
         public static TextureCube DEFAULT_TEXTURE_MISSING_CUBE;
         public static Texture2D DEFAULT_TEXTURE_EMISSIVE;
         public string DEFAULT_TEXTURE_MISSING_NAME => $@"{Main.Directory}\Content\Utility\MissingTexture";

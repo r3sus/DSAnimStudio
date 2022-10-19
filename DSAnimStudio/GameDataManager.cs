@@ -370,11 +370,23 @@ namespace DSAnimStudio
             {
                 if (GameType == SoulsGames.DS1 || GameType == SoulsGames.DES)
                 {
+
+                    var p1 = GetInterrootPath($@"other\SYSTEX_TEX.tpf");
+                    var ext = "";
+                    foreach (var e in new[] { "", ".dcx" })
+                    {
+                        if (File.Exists(p1 + e))
+                        {
+                            ext = e;
+                            break;
+                        }
+                    }
+
                     TexturePool.AddTpfsFromPaths(new List<string>
                     {
-                        GetInterrootPath($@"other\SYSTEX_TEX.tpf"),
-                        GetInterrootPath($@"other\envlight.tpf"),
-                        GetInterrootPath($@"other\lensflare.tpf"),
+                        GetInterrootPath($@"other\SYSTEX_TEX.tpf"+ext),
+                        GetInterrootPath($@"other\envlight.tpf"+ext),
+                        GetInterrootPath($@"other\lensflare.tpf"+ext),
                     }, progress);
                 }
                 else if (GameType == SoulsGames.DS1R)
@@ -693,17 +705,59 @@ namespace DSAnimStudio
                     }
                     else if (GameType == SoulsGames.DS1)
                     {
-                        var chrbnd = BND3.Read(GetInterrootPath($@"chr\{id}.chrbnd"));
+
+                        IBinder chrbnd = null;
                         IBinder anibnd = null;
                         IBinder texbxf = null;
                         IBinder extraTexChrbnd = null;
                         IBinder extraTexbxf = null;
 
-                        if (System.IO.File.Exists(GetInterrootPath($@"chr\{id}.anibnd")))
-                            anibnd = BND3.Read(GetInterrootPath($@"chr\{id}.anibnd"));
+                        var p1 = GetInterrootPath($@"chr\{id}.chrbnd");
+                        bool b1 = false;
+                        foreach (var e in new[] { "",".dcx" })
+                        {
+                            if (b1 = File.Exists(p1+ e))
+                            {
+                                p1 += e;
+                                chrbnd = BND3.Read(p1);
+                                break;
+                            }
+                        }
 
-                        if (System.IO.File.Exists(GetInterrootPath($@"chr\{id.Substring(0, 4)}9.chrbnd")))
-                            extraTexChrbnd = BND3.Read(GetInterrootPath($@"chr\{id.Substring(0, 4)}9.chrbnd"));
+                        if (!b1) return;
+
+                        /*
+                        foreach (var i in new[] { 1,2 })
+                        {
+                            if (File.Exists(p1))                            
+                                break;                            
+                            
+                            p1 += ext;
+                            ext = ".dcx";
+                        }
+                        */
+
+                        p1 = GetInterrootPath($@"chr\{id}.anibnd");
+                        foreach (var e in new[] { "", ".dcx" })
+                        {
+                            if (File.Exists(p1 + e))
+                            {
+                                p1 += e;
+                                anibnd = BND3.Read(p1);
+                                break;
+                            }
+                        }
+
+                        p1 = GetInterrootPath($@"chr\{id.Substring(0, 4)}9.chrbnd");
+                        foreach (var e in new[] { "", ".dcx" })
+                        {
+                            if (File.Exists(p1 + e))
+                            {
+                                p1 += e;
+                                extraTexChrbnd = BND3.Read(p1);
+                                break;
+                            }
+                        }
 
                         BinderFile chrtpfbhd = null;
 

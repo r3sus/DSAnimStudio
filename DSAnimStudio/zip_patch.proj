@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="ZipPatch" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<Target Name="ZipPatch">
+
+    <PropertyGroup>
+      <OutputPath>bin\x64\Debug\</OutputPath> 
+      <AssemblyName>DS Anim Studio</AssemblyName>       
+      <SolutionDir>..</SolutionDir>       
+      <ReleasesDir>$(SolutionDir)\Releases\</ReleasesDir>
+      <EXE>$(AssemblyName).exe</EXE>             
+      <SAP>lib\SoulsAssetPipeline.dll</SAP>            
+    </PropertyGroup>
+    
+    <GetAssemblyIdentity AssemblyFiles="$(OutputPath)\$(EXE)">
+      <Output TaskParameter="Assemblies" ItemName="MyAssemblyIdentities" />
+    </GetAssemblyIdentity>
+    
+    <PropertyGroup>  
+      <Ver>%(MyAssemblyIdentities.Version)</Ver>
+      
+      <NewPatchDir>$(ReleasesDir)\Patches\$(Ver)\</NewPatchDir>      
+      <NewFilesDir>$(NewPatchDir)\patch\</NewFilesDir>
+
+      <tail>patch_v$(Ver)</tail>
+
+      <DistDir>$(NewPatchDir)\Dist\</DistDir>      
+      <ZipName>$(AssemblyName)_$(tail).zip</ZipName>
+      <ZipPath>$(DistDir)\$(ZipName)</ZipPath>
+
+      <rdm>$(ReleasesDir)\md\new.md</rdm>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(NewPatchDir)" />
+    <MakeDir Directories="$(NewFilesDir)\$(SAP)\..;$(DistDir)" />
+    <Copy SourceFiles="$(OutputPath)\$(EXE)" DestinationFiles="$(NewFilesDir)\$(EXE)" />
+    <Copy SourceFiles="$(OutputPath)\$(SAP)" DestinationFiles="$(NewFilesDir)\$(SAP)" />
+    <Copy SourceFiles="$(rdm)" DestinationFiles="$(NewFilesDir)\readme_$(tail).md" />
+    <Copy SourceFiles="$(rdm)" DestinationFiles="$(DistDir)\notes_v$(Ver).md" />    
+
+    <Delete Files="$(ZipPath)" />
+    <ZipDirectory SourceDirectory="$(NewFilesDir)" DestinationFile="$(ZipPath)" />
+    <WriteLinesToFile File="$(DistDir)\release_$(tail).bat" Lines="gh release create %22ver$(Ver)%22 -d -F %22notes_v$(Ver).md%22 -t %22$(AssemblyName) Version $(Ver)%22 %22$(ZipName)%22" Overwrite="true"/>
+  </Target>
+
+</Project>

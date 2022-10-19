@@ -71,6 +71,14 @@ namespace DSAnimStudio
                 var msgbndRelativePath = $@"msg\{language}\{msgbndName}";
                 var fullMsgbndPath = GameDataManager.GetInterrootPath(msgbndRelativePath);
                 IBinder msgbnd = null;
+                foreach (var ext in new[] { "", ".dcx" })
+                {
+                    if (File.Exists(fullMsgbndPath+ext))
+                    {
+                        fullMsgbndPath += ext;
+                        break;
+                    }
+                }
                 if (File.Exists(fullMsgbndPath))
                 {
                     if (BND3.Is(fullMsgbndPath))
@@ -78,8 +86,15 @@ namespace DSAnimStudio
                     else if (BND4.Is(fullMsgbndPath))
                         msgbnd = BND4.Read(fullMsgbndPath);
 
-                    weaponNameFMGs.Add(FMG.Read(msgbnd.Files.First(x => x.ID == weaponNamesIdx).Bytes));
-                    armorNameFMGs.Add(FMG.Read(msgbnd.Files.First(x => x.ID == armorNamesIdx).Bytes));
+                    try
+                    {
+                        weaponNameFMGs.Add(FMG.Read(msgbnd.Files.First(x => x.ID == weaponNamesIdx).Bytes));
+                        armorNameFMGs.Add(FMG.Read(msgbnd.Files.First(x => x.ID == armorNamesIdx).Bytes));
+                    }
+                    catch
+                    {
+                        System.Windows.Forms.MessageBox.Show("Skipping FMG: no matches for requested NamesIdx.");
+                    }
                 }
 
                 if (msgbnd == null)

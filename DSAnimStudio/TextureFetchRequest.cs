@@ -340,6 +340,8 @@ namespace DSAnimStudio
 
         private const uint FourCCDX10 = 0x30315844;
 
+ //       public Texture2D invtex;
+
         public Texture FetchNew()
         {
             if (CachedTexture != null)
@@ -348,6 +350,29 @@ namespace DSAnimStudio
             var texInfo = FetchTexInfo();
             if (texInfo == null)
                 return null;
+
+            if (texInfo.Platform == TPF.TPFPlatform.Xbox360)
+            {
+                TPFReference = null;
+                return CachedTexture = null;
+            }
+            // todo: add 360 TPFs support
+            // per https://github.com/horkrux/DeS-BNDBuild
+            
+            // todo: add invalid texture selection GUI / randomize
+
+            /* 
+            //options:
+            {Main.DEFAULT_TEXTURE_MISSING,
+            Main.WHITE_TEXTURE,
+            Main.DEFAULT_TEXTURE_DIFFUSE,
+            Main.DEFAULT_TEXTURE_EMISSIVE,
+            Main.DEFAULT_TEXTURE_NORMAL,
+            Main.DEFAULT_TEXTURE_NORMAL_DS2,
+            Main.DEFAULT_TEXTURE_SPECULAR,
+            Main.DEFAULT_TEXTURE_SPECULAR_DS2,
+            Main.TAE_EDITOR_BLANK_TEX};
+            */
 
             int height = texInfo.Texture?.Header?.Height ?? 0;
             int width = texInfo.Texture?.Header?.Width ?? 0;
@@ -757,7 +782,7 @@ namespace DSAnimStudio
         public Texture2D Fetch2D()
         {
             var t = FetchNew();
-            if (t == null)
+            if (t == null) // || t.GetType()!= Main.TAE_EDITOR_BLANK_TEX.GetType())
                 return null;
             else
                 return (Texture2D)t;

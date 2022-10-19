@@ -324,10 +324,17 @@ namespace DSAnimStudio
 
                 if (GameDataManager.GameType == SoulsAssetPipeline.SoulsGames.DS1)
                 {
-                    if (Directory.Exists($"{interroot}\\param\\GameParam\\") && File.Exists($"{interroot}\\param\\GameParam\\GameParam.parambnd"))
-                        ParamBNDs[GameDataManager.GameType] = BND3.Read($"{interroot}\\param\\GameParam\\GameParam.parambnd");
-                    else
-                        return false;
+                    bool r1 = false;
+                    foreach (var ext in new[] { "", ".dcx" })
+                    {
+                        var p1 = $"{interroot}\\param\\GameParam\\GameParam.parambnd" + ext;
+                        if (r1 = File.Exists(p1))
+                        {
+                            ParamBNDs[GameDataManager.GameType] = BND3.Read(p1);
+                            break;
+                        }
+                    }
+                    if (!r1) return false;
                 }
                 else if (GameDataManager.GameType == SoulsAssetPipeline.SoulsGames.DS1R)
                 {
